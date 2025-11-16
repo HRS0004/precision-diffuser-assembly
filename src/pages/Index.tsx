@@ -4,10 +4,12 @@ import { ViewControls } from '@/components/ViewControls';
 import { Loader2 } from 'lucide-react';
 
 type CameraView = 'top' | 'side' | 'isometric';
+type ModelType = 'diffuser' | 'casing';
 
 const Index = () => {
   const [view, setView] = useState<CameraView>('isometric');
   const [bladeCount, setBladeCount] = useState(24);
+  const [modelType, setModelType] = useState<ModelType>('diffuser');
 
   return (
     <main className="relative w-screen h-screen bg-viewport overflow-hidden">
@@ -37,7 +39,7 @@ const Index = () => {
             </div>
           }
         >
-          <Scene3D view={view} bladeCount={bladeCount} />
+          <Scene3D view={view} bladeCount={bladeCount} modelType={modelType} />
         </Suspense>
       </div>
 
@@ -47,21 +49,34 @@ const Index = () => {
         onViewChange={setView}
         bladeCount={bladeCount}
         onBladeCountChange={setBladeCount}
+        modelType={modelType}
+        onModelTypeChange={setModelType}
       />
 
       {/* Info Panel */}
       <div className="absolute bottom-4 right-4 z-10 bg-card/95 backdrop-blur-sm border border-border rounded-lg p-4 shadow-lg max-w-xs">
-        <h3 className="text-sm font-semibold mb-2 text-foreground">
-          Specifications
-        </h3>
-        <div className="space-y-1 text-xs text-muted-foreground">
-          <p>• Blade Count: {bladeCount}</p>
-          <p>• Axial Thickness: 8-12mm</p>
-          <p>• Material: Anodized Aluminum</p>
-          <p>• Blade Profile: Aerodynamic Airfoil</p>
-          <p>• Sweep: Backward-Swept Exit</p>
-          <p>• Hub: Streamlined Dome Design</p>
-        </div>
+          <h3 className="text-sm font-semibold mb-2 text-foreground">
+            Specifications
+          </h3>
+          {modelType === 'diffuser' ? (
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <p>• Blade Count: {bladeCount}</p>
+              <p>• Axial Thickness: 8-12mm</p>
+              <p>• Material: Anodized Aluminum</p>
+              <p>• Blade Profile: Aerodynamic Airfoil</p>
+              <p>• Sweep: Backward-Swept Exit</p>
+              <p>• Hub: Streamlined Dome Design</p>
+            </div>
+          ) : (
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <p>• Model: N32-125</p>
+              <p>• Suction: DN 32 (Ø125mm)</p>
+              <p>• Discharge: DN 50 (Ø140mm)</p>
+              <p>• Overall: 319×190mm</p>
+              <p>• Wall: 10mm thickness</p>
+              <p>• Material: Cast Steel/Iron</p>
+            </div>
+          )}
       </div>
     </main>
   );
