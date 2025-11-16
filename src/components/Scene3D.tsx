@@ -1,17 +1,20 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
 import { DiffuserBladeAssembly } from './DiffuserBladeAssembly';
+import { CentrifugalPumpCasing } from './CentrifugalPumpCasing';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 type CameraView = 'top' | 'side' | 'isometric';
+type ModelType = 'diffuser' | 'casing';
 
 interface Scene3DProps {
   view: CameraView;
   bladeCount: number;
+  modelType: ModelType;
 }
 
-export const Scene3D = ({ view, bladeCount }: Scene3DProps) => {
+export const Scene3D = ({ view, bladeCount, modelType }: Scene3DProps) => {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const controlsRef = useRef<any>(null);
 
@@ -77,7 +80,11 @@ export const Scene3D = ({ view, bladeCount }: Scene3DProps) => {
       <Environment preset="studio" />
 
       {/* Main component */}
-      <DiffuserBladeAssembly bladeCount={bladeCount} />
+      {modelType === 'diffuser' ? (
+        <DiffuserBladeAssembly bladeCount={bladeCount} />
+      ) : (
+        <CentrifugalPumpCasing />
+      )}
 
       {/* Ground plane for reference */}
       <mesh
