@@ -2,6 +2,7 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Label } from './ui/label';
 import { Slider } from './ui/slider';
+import { Switch } from './ui/switch';
 import { Package } from 'lucide-react';
 
 type CameraView = 'top' | 'side' | 'isometric';
@@ -14,6 +15,10 @@ interface ViewControlsProps {
   onBladeCountChange: (count: number) => void;
   modelType: ModelType;
   onModelTypeChange: (type: ModelType) => void;
+  autoRotate: boolean;
+  onAutoRotateChange: (rotate: boolean) => void;
+  showCutaway: boolean;
+  onShowCutawayChange: (show: boolean) => void;
 }
 
 export const ViewControls = ({
@@ -23,6 +28,10 @@ export const ViewControls = ({
   onBladeCountChange,
   modelType,
   onModelTypeChange,
+  autoRotate,
+  onAutoRotateChange,
+  showCutaway,
+  onShowCutawayChange,
 }: ViewControlsProps) => {
   return (
     <Card className="absolute top-4 left-4 z-10 p-4 bg-card/95 backdrop-blur-sm border-border shadow-lg">
@@ -101,6 +110,26 @@ export const ViewControls = ({
           </div>
         )}
 
+        {/* Animation Controls */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs text-foreground">Auto-Rotate</Label>
+            <Switch
+              checked={autoRotate}
+              onCheckedChange={onAutoRotateChange}
+            />
+          </div>
+          
+          {modelType === 'casing' && (
+            <div className="flex items-center justify-between">
+              <Label className="text-xs text-foreground">Internal View</Label>
+              <Switch
+                checked={showCutaway}
+                onCheckedChange={onShowCutawayChange}
+              />
+            </div>
+          )}
+        </div>
         <div className="text-xs text-muted-foreground pt-2 border-t border-border">
           <p className="font-medium mb-1">Controls:</p>
           <p>• Left click + drag to rotate</p>

@@ -10,6 +10,8 @@ const Index = () => {
   const [view, setView] = useState<CameraView>('isometric');
   const [bladeCount, setBladeCount] = useState(24);
   const [modelType, setModelType] = useState<ModelType>('diffuser');
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [showCutaway, setShowCutaway] = useState(false);
 
   return (
     <main className="relative w-screen h-screen bg-viewport overflow-hidden">
@@ -39,7 +41,13 @@ const Index = () => {
             </div>
           }
         >
-          <Scene3D view={view} bladeCount={bladeCount} modelType={modelType} />
+          <Scene3D 
+            view={view} 
+            bladeCount={bladeCount} 
+            modelType={modelType}
+            autoRotate={autoRotate}
+            showCutaway={showCutaway}
+          />
         </Suspense>
       </div>
 
@@ -51,6 +59,10 @@ const Index = () => {
         onBladeCountChange={setBladeCount}
         modelType={modelType}
         onModelTypeChange={setModelType}
+        autoRotate={autoRotate}
+        onAutoRotateChange={setAutoRotate}
+        showCutaway={showCutaway}
+        onShowCutawayChange={setShowCutaway}
       />
 
       {/* Info Panel */}
