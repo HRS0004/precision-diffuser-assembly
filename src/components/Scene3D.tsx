@@ -3,6 +3,7 @@ import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei
 import { DiffuserBladeAssembly } from './DiffuserBladeAssembly';
 import { CentrifugalPumpCasing } from './CentrifugalPumpCasing';
 import { useEffect, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 type CameraView = 'top' | 'side' | 'isometric';
@@ -12,11 +13,14 @@ interface Scene3DProps {
   view: CameraView;
   bladeCount: number;
   modelType: ModelType;
+  autoRotate: boolean;
+  showCutaway: boolean;
 }
 
-export const Scene3D = ({ view, bladeCount, modelType }: Scene3DProps) => {
+export const Scene3D = ({ view, bladeCount, modelType, autoRotate, showCutaway }: Scene3DProps) => {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const controlsRef = useRef<any>(null);
+  const modelGroupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
     if (!cameraRef.current || !controlsRef.current) return;
@@ -42,6 +46,13 @@ export const Scene3D = ({ view, bladeCount, modelType }: Scene3DProps) => {
 
     controls.update();
   }, [view]);
+
+  // Auto-rotation animation
+  useFrame(() => {
+    if (autoRotate && modelGroupRef.current && !controlsRef.current?.autoRotate) {
+      modelGroupRef.current.rotation.y += 0.005;
+    }
+  });
 
   return (
     <Canvas
@@ -79,12 +90,14 @@ export const Scene3D = ({ view, bladeCount, modelType }: Scene3DProps) => {
       {/* Environment for reflections */}
       <Environment preset="studio" />
 
-      {/* Main component */}
-      {modelType === 'diffuser' ? (
-        <DiffuserBladeAssembly bladeCount={bladeCount} />
-      ) : (
-        <CentrifugalPumpCasing />
-      )}
+      {/* Main component with rotation group */}
+      <group ref={modelGroupRef}>
+        {modelType === 'diffuser' ? (
+          <DiffuserBladeAssembly bladeCount={bladeCount} />
+        ) : (
+          <CentrifugalPumpCasing showCutaway={showCutaway} />
+        )}
+      </group>
 
       {/* Ground plane for reference */}
       <mesh
